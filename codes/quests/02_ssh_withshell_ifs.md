@@ -56,7 +56,8 @@ cat > sales_data.txt << EOF
 EOF
 ```
 - words.txt 파일 생성
-```cat > words.txt << EOF
+```
+cat > words.txt << EOF
 apple
 banana
 Apple
@@ -146,6 +147,7 @@ fi
 
 echo "Last 5 Log : " && cut -d" " -f 2- "$V_LOG_FILE" | sort -r | tail -n 5
 ```
+### 🔧 결과
 ```
 [yhc@192.168.0.51 ~/shell_practice]$ source log_monitor.sh 
 Log Line Output : 
@@ -203,10 +205,71 @@ words.txt 파일의 단어들을 분석하여 빈도수 계산
 모든 단어를 소문자로 변환
 중복 제거 후 빈도수와 함께 출력
 빈도수 기준 내림차순 정렬
-대소문자 구분하는 경우:
+```
+- 대소문자 구분하는 경우
+```
 원본 그대로 중복 제거 후 빈도수 계산
 총 고유 단어 개수 출력
 가장 빈도가 높은 단어가 3회 이상 나타나면 "높은 중복도", 2회면 "보통 중복도", 1회면 "낮은 중복도" 출력
+```
+### 🔧 정답
+```
+vi word_frequency.sh
+```
+```
+# vi
+#!/bin/bash
+
+v_file="$1"
+
+read -p "대소문자를 구분하시겠습니까? y or n : " v_select
+
+if [ "$v_select" = "n" ]; then
+    many_word=$(tr -cs '[:alnum:]' '\n' < "$v_file" | tr '[:upper:]' '[:lower:]' | sort | uniq -c | sort -rn)
+    echo "$many_word"
+elif [ "$v_select" = "y" ]; then
+    many_word2=$(tr -cs '[:alnum:]' '\n' < "$v_file" | sort | uniq -c | sort -rn)
+    echo "$many_word2"
+
+    max_count=$(echo "$many_word2" | awk 'NR==1 {print $1}')
+
+    if [ "$max_count" -ge 3 ]; then
+        echo "높은 중복도"
+    elif [ "$max_count" -eq 2 ]; then
+        echo "보통 중복도"
+    else
+        echo "낮은 중복도"
+    fi
+else
+    echo "재입력하세요!"
+fi
+```
+### 🔧 결과
+```
+[parksejin@localhost shell_practice]$ source word_frequency.sh words.txt
+대소문자를 구분하시겠습니까? y or n : y
+      2 banana
+      2 Apple
+      1 fig
+      1 elderberry
+      1 date
+      1 CHERRY
+      1 Cherry
+      1 cherry
+      1 BANANA
+      1 apple
+보통 중복도
+[parksejin@localhost shell_practice]$ source word_frequency.sh words.txt
+대소문자를 구분하시겠습니까? y or n : n
+      3 cherry
+      3 banana
+      3 apple
+      1 fig
+      1 elderberry
+      1 date
+[parksejin@localhost shell_practice]$ source word_frequency.sh words.txt
+대소문자를 구분하시겠습니까? y or n : u
+재입력하세요!
 ```
 - 힌트
 ```
