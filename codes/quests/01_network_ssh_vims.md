@@ -3,7 +3,7 @@
 - vim 편집기를 활용하여 텍스트 파일에서 Create / Read / Update / Delete 작업을 정확하게 수행
 
 ## 📁 실습 사전 환경 준비 (모든 컴퓨터 공통)
-```
+```bash
 #!/bin/bash
 mkdir -p ~/vim_crud_practice/{comp1,comp2,comp3}
 cd ~/vim_crud_practice/comp1
@@ -19,7 +19,7 @@ chmod +x setup_env.sh && ./setup_env.sh
 ```
 ## 🧭 실습 시나리오
 - 각 실습은 서로 다른 SSH 대상에서 수행
-```
+```bash
 ssh user@192.168.0.101  # 컴퓨터1 (comp1 디렉토리 실습)
 ssh user@192.168.0.102  # 컴퓨터2 (comp2 디렉토리 실습)
 ssh user@192.168.0.103  # 컴퓨터3 (comp3 디렉토리 실습)
@@ -32,14 +32,14 @@ ssh user@192.168.0.103  # 컴퓨터3 (comp3 디렉토리 실습)
 - vim으로 파일 열기
 - Buy groceries 줄을 복사한 뒤, 맨 아래에 두 번 붙여넣기
 - 저장 후 종료
-```
+```bash
 [parksejin@192.168.0.50 ~]$ ssh kangbeenlee@192.168.0.53
 kangbeenlee@192.168.0.53 `s password : qwer1234
 Activate the web console with: systemctl enable --now cockpit.socket
 
 Last login: Thu Jul 24 15:30:20 2025 from 192.168.0.3
 ```
-```
+```bash
 [kangbeenlee@192.168.0.53 ~/vim_crud_practice/comp2]$ cat todo.txt
 1. Clean the house
 2. Buy groceries
@@ -60,7 +60,7 @@ Durian
 Elderberry
 ```
 - 저장 후 종료
-```
+```bash
 [parksejin@192.168.0.50 ~]$ ssh guinjung@192.168.0.59
 guinjung@192.168.0.59`s password: 
 Activate the web console with: systemctl enable --now cockpit.socket
@@ -68,7 +68,7 @@ Activate the web console with: systemctl enable --now cockpit.socket
 Last login: Thu Jul 24 15:27:16 2025 from 192.168.0.41
 [guinjung@192.168.0.59 ~]$ 
 ```
-```
+```bash
 [guinjung@192.168.0.59 ~/vim_crud_practice/comp1]$ cat fruits.txt 
 Apple
 Banana
@@ -83,14 +83,14 @@ Elderberry
 - john@example.com → john.doe@gmail.com으로 수정
 - 수정한 라인을 복사한 후 아래 줄에 3번 반복 붙여넣기
 - 저장 후 종료
-```
+```bash
 [parksejin@192.168.0.50 ~]$ ssh ohjimin@192.168.0.4
 ohjimin@192.168.0.4`s password: 
 Activate the web console with: systemctl enable --now cockpit.socket
 
 Last login: Thu Jul 24 15:26:59 2025 from 192.168.0.3
 ```
-```
+```bash
 [ohjimin@192.168.12.129 ~/vim_crud_practice/comp3]$ cat users.csv 
 Name,Email
 John Doe,john.doe@gmail.com
@@ -108,15 +108,15 @@ John Doe,john.doe@gmail.com
 - 🔧 목표 : 줄 삭제 후 조작
 - 작업 경로 : ~/vim_crud_practice/comp1/fruits.txt
 - Cherry 해당 줄을 삭제
--저장 후 종료
-```
+- 저장 후 종료
+```bash
 [parksejin@192.168.0.50 ~]$ ssh im@192.168.0.31
 im@192.168.0.31`s password: 
 Activate the web console with: systemctl enable --now cockpit.socket
 
 Last login: Thu Jul 24 15:45:16 2025 from 192.168.0.53
 ```
-```
+```bash
 [im@192.168.0.31 ~/vim_crud_practice/comp1]$ vi fruits.txt 
 [im@192.168.0.31 ~/vim_crud_practice/comp1]$ cat fruits.txt 
 Apple
@@ -129,7 +129,7 @@ Banana
 - 모든 Doe → Smith로 전체 치환
 - 실수로 한 줄을 삭제한 뒤, 삭제된 줄 복구
 - 저장 후 종료
-```
+```bash
 [parksejin@192.168.0.50 ~]$ ssh shinbeomjun@192.168.0.34
 shinbeomjun@192.168.0.34`s password: 
 Activate the web console with: systemctl enable --now cockpit.socket
@@ -137,7 +137,7 @@ Activate the web console with: systemctl enable --now cockpit.socket
 Last login: Thu Jul 24 15:38:08 2025 from 192.168.0.46
 범준바보
 ```
-```
+```bash
 [shinbeomjun@192.168.0.34 ~/vim_crud_practice/comp3]$ vi users.csv 
 [shinbeomjun@192.168.0.34 ~/vim_crud_practice/comp3]$ cat users.csv 
 Name,Email
@@ -150,7 +150,6 @@ Jane Smith,jane@example.com
 ```
  → u (undo), U (줄 단위 undo), Ctrl+r (redo)
 ```
-
 - 여러 줄을 복사하고 여러 위치에 붙여넣으려면?
 ```
  → V (비쥬얼 모드로 여러 줄 선택) → y → 원하는 위치로 이동 후 p

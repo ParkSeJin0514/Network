@@ -7,7 +7,7 @@ cd ~/shell_practice
 ```
 ## 🔹 2. 실습용 데이터 파일 생성
 - students.txt 파일 생성
-```
+```bash
 cat > students.txt << EOF
 김철수:수학:85:영어:92:과학:78
 이영희:수학:95:영어:88:과학:91
@@ -22,7 +22,7 @@ cat > students.txt << EOF
 EOF
 ```
 - server_logs.txt 파일 생성
-```
+```bash
 cat > server_logs.txt << EOF
 2024-01-15 10:30:15 INFO User login successful: user001
 2024-01-15 10:31:22 ERROR Database connection failed
@@ -39,7 +39,7 @@ cat > server_logs.txt << EOF
 EOF
 ```
 - sales_data.txt 파일 생성
-```
+```bash
 cat > sales_data.txt << EOF
 2024-01,서울,노트북,1500000
 2024-01,부산,스마트폰,800000
@@ -56,7 +56,7 @@ cat > sales_data.txt << EOF
 EOF
 ```
 - words.txt 파일 생성
-```
+```bash
 cat > words.txt << EOF
 apple
 banana
@@ -119,10 +119,10 @@ grep, wc, uniq, sort, tail 명령어 활용
 수치 계산을 위한 조건문 사용
 ```
 ### 🔧 정답
-```
+```bash
 [yhc@192.168.0.51 ~/shell_practice]$ vi log_monitor.sh
 ```
-```
+```bash
 # vi
 #!bin/bash
 
@@ -148,7 +148,7 @@ fi
 echo "Last 5 Log : " && cut -d" " -f 2- "$V_LOG_FILE" | sort -r | tail -n 5
 ```
 ### 🔧 결과
-```
+```bash
 [yhc@192.168.0.51 ~/shell_practice]$ source log_monitor.sh 
 Log Line Output : 
 12
@@ -213,10 +213,10 @@ words.txt 파일의 단어들을 분석하여 빈도수 계산
 가장 빈도가 높은 단어가 3회 이상 나타나면 "높은 중복도", 2회면 "보통 중복도", 1회면 "낮은 중복도" 출력
 ```
 ### 🔧 정답
-```
+```bash
 vi word_frequency.sh
 ```
-```
+```bash
 # vi
 #!/bin/bash
 
@@ -245,7 +245,7 @@ else
 fi
 ```
 ### 🔧 결과
-```
+```bash
 [parksejin@localhost shell_practice]$ source word_frequency.sh words.txt
 대소문자를 구분하시겠습니까? y or n : y
       2 banana
