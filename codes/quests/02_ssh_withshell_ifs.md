@@ -128,11 +128,13 @@ grep, wc, uniq, sort, tail 명령어 활용
 
 V_LOG_FILE="server_logs.txt"
 
+# server_logs.txt를 입력 받아 결과 출력
 echo "Log Line Output : " && wc -l < "$V_LOG_FILE"
 echo "ERROR, WARNING, INFO Output : " && cut -d" " -f 3 "$V_LOG_FILE" | sort | uniq -c
 grep "ERROR" "$V_LOG_FILE" > errors.log
 echo "Most ERROR : " && cut -d" " -f 4- errors.log | sort | uniq -c | sort -nr | head -n 1
 
+# 'ERROR' 비율에 따라 '위험', '주의', '양호' 출력
 V_TOTAL=$(wc -l < $V_LOG_FILE)
 V_ERROR=$(grep -c "ERROR" $V_LOG_FILE)
 V_RATE=$((V_ERROR * 100 / V_TOTAL))
@@ -145,6 +147,7 @@ else
         echo "GOOD"
 fi
 
+# 로그 역순 정렬 후 마지막 줄부터 5줄 출력
 echo "Last 5 Log : " && cut -d" " -f 2- "$V_LOG_FILE" | sort -r | tail -n 5
 ```
 ### 🔧 결과
@@ -223,7 +226,8 @@ vi word_frequency.sh
 v_file="$1"
 
 read -p "대소문자를 구분하시겠습니까? y or n : " v_select
-
+# 이중 if문 사용 / y 아니면 n 를 입력했을 때 결과 출력
+# 다른 결과값 넣을시 "재입력하세요!" 출력
 if [ "$v_select" = "n" ]; then
     many_word=$(tr -cs '[:alnum:]' '\n' < "$v_file" | tr '[:upper:]' '[:lower:]' | sort | uniq -c | sort -rn)
     echo "$many_word"
@@ -231,6 +235,9 @@ elif [ "$v_select" = "y" ]; then
     many_word2=$(tr -cs '[:alnum:]' '\n' < "$v_file" | sort | uniq -c | sort -rn)
     echo "$many_word2"
 
+# awk : 텍스트 파일에서 줄과 필드를 기준으로 데이터를 처리하는 명령
+# 'NR==1' : 현재 줄 번호(NR)가 1일 때만 {} 내부의 명령을 실행
+# {print $1} : 현재 줄의 첫 번째 필드($1)를 출력 (공백 또는 탭으로 나뉜 필드 기준)
     max_count=$(echo "$many_word2" | awk 'NR==1 {print $1}')
 
     if [ "$max_count" -ge 3 ]; then
