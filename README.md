@@ -4,3 +4,4 @@
 ## Quests
 - Network ssh vims Commands : [07.24 vi 활용](codes/quests/01_network_ssh_vims.md)
 - Network ssh Withshell ifs Commands : [07.24 vi if문 활용](codes/quests/02_ssh_withshell_ifs.md)
+- Network vim : [07.25 vi](codes/quests/03.md)
