@@ -146,7 +146,8 @@ grep, wc, uniq, sort, tail 명령어 활용
 V_LOG_FILE="server_logs.txt"
 
 # server_logs.txt를 입력 받아 결과 출력
-echo "Log Line Output : " && wc -l < "$V_LOG_FILE"
+V_TOTAL_LOG_LINE=$(wc -l < "$V_LOG_FILE")
+echo "Total Log Line : $V_TOTAL_LOG_LINE"
 echo "ERROR, WARNING, INFO Output : " && cut -d" " -f 3 "$V_LOG_FILE" | sort | uniq -c
 grep "ERROR" "$V_LOG_FILE" > errors.log
 echo "Most ERROR : " && cut -d" " -f 4- errors.log | sort | uniq -c | sort -nr | head -n 1
@@ -170,8 +171,7 @@ echo "Last 5 Log : " && cut -d" " -f 2- "$V_LOG_FILE" | sort -r | tail -n 5
 ### 🔧 결과
 ```bash
 [yhc@192.168.0.51 ~/shell_practice]$ source log_monitor.sh 
-Log Line Output : 
-12
+Log Line Output : 12
 ERROR, WARNING, INFO Output : 
       5 ERROR
       5 INFO
