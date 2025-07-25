@@ -148,14 +148,14 @@ V_LOG_FILE="server_logs.txt"
 # server_logs.txt를 입력 받아 결과 출력
 V_TOTAL_LOG_LINE=$(wc -l < "$V_LOG_FILE")
 echo "Total Log Line : $V_TOTAL_LOG_LINE"
-echo "ERROR, WARNING, INFO Output : " && cut -d" " -f 3 "$V_LOG_FILE" | sort | uniq -c
+
+V_ERROR_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "ERROR" | sort | wc -w)
+V_WARNING_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "WARNING" | sort | uniq -c | wc -w)
+echo "ERROR : $V_ERROR_LOG"
+echo "WARNING : $V_WARNING_LOG"
+
 grep "ERROR" "$V_LOG_FILE" > errors.log
 echo "Most ERROR : " && cut -d" " -f 4- errors.log | sort | uniq -c | sort -nr | head -n 1
-
-# 'ERROR' 비율에 따라 '위험', '주의', '양호' 출력
-V_TOTAL=$(wc -l < $V_LOG_FILE)
-V_ERROR=$(grep -c "ERROR" $V_LOG_FILE)
-V_RATE=$((V_ERROR * 100 / V_TOTAL))
 
 echo "Situation : " && if [ "$V_RATE" -ge 30 ]; then
         echo "DANGEROUS"
