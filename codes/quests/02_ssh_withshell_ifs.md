@@ -90,6 +90,23 @@ students.txt 파일을 분석하여 다음 기능을 수행하는 스크립트 �
 90점 이상(A), 80점 이상(B), 70점 이상(C), 그 외(D) 등급별 학생 수 출력
 평균이 85점 이상이면 "우수", 75점 이상이면 "양호", 그 외는 "보통" 출력
 ```
+```
+#!/bin/bash
+
+V_MATH="수학"
+V_ENGLISH="영어"
+read -p "input subject : " V_SUBJECT
+
+if [ "$V_SUBJECT" = "$V_MATH" ]; then
+        echo "in word! $V_MATH"
+elif [ "$V_SUBJECT" = "$V_ENGLISH" ]; then
+        echo "in word! $V_ENGLISH"
+else
+        echo "not in word!"
+fi
+
+V_MATH_MAX=$(cut -d":" -f 3 students.txt | sort -n | tail -n 1)
+```
 - 힌트
 ```
 cut, grep, sort, wc 명령어 활용
@@ -124,7 +141,7 @@ grep, wc, uniq, sort, tail 명령어 활용
 ```
 ```bash
 # vi
-#!bin/bash
+#!/bin/bash
 
 V_LOG_FILE="server_logs.txt"
 
