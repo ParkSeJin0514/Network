@@ -144,16 +144,20 @@ V_MATH_MAX=$(cut -d":" -f 3 students.txt | sort -n | tail -n 1)
 
 V_LOG_FILE="server_logs.txt"
 
-# server_logs.txt를 입력 받아 결과 출력
+# "server_logs.txt" 를 입력 받아 결과 출력
 V_TOTAL_LOG_LINE=$(wc -l < "$V_LOG_FILE")
 echo "Total Log Line : $V_TOTAL_LOG_LINE"
 
+# "server_logs.txt" 를 읽어온 후 "ERROR, WARNING" 을 찾은 후 출력
 V_ERROR_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "ERROR" | sort | wc -w)
 V_WARNING_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "WARNING" | sort | uniq -c | wc -w)
 echo "ERROR : $V_ERROR_LOG"
 echo "WARNING : $V_WARNING_LOG"
 
+# "ERROR" 찾은 후 "errors.log" 에 저장
 grep "ERROR" "$V_LOG_FILE" > errors.log
+
+# "errors.log" 에서 제일 많이 "ERROR" 가 나온 한 줄 출력
 echo "Most ERROR : " && cut -d" " -f 4- errors.log | sort | uniq -c | sort -nr | head -n 1
 
 echo "Situation : " && if [ "$V_RATE" -ge 30 ]; then

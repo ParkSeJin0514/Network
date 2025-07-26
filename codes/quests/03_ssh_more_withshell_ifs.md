@@ -46,6 +46,9 @@ EOF
 
 ### 🔧 정답
 ```bash
+vi searchlog.sh
+```
+```bash
 #!/bin/bash
 
 V_NETLOG="network.log"
@@ -90,6 +93,9 @@ echo "성공률: $TOTAL_AVG%"
 - head나 tail로 결과 제한
 
 ### 🔧 정답
+```bash
+vi connectlog.sh
+```
 ```bash
 #!/bin/bash
 
@@ -141,7 +147,9 @@ OR
 - ping은 1회만 실행 (ping -c 1)
 
 ### 🔧 정답
-
+```bash
+vi servers.sh
+```
 ```bash
 #!/bin/bash
 
@@ -190,6 +198,9 @@ fi
 - cut, sort 명령어 활용
 - 숫자 비교를 위한 조건문 사용
 ### 🔧 정답
+```bash
+vi checkconnections.sh
+```
 ```bash
 #!/bin/bash
 
