@@ -67,6 +67,7 @@ echo "성공: $TOTAL_SUC건"
 echo "실패: $TOTAL_FAIL건"
 echo "성공률: $TOTAL_AVG%"
 ```
+### 🔧 결과
 ```bash
 [parksejin@localhost quests]$ source searchlog.sh
 === 네트워크 연결 분석 결과 ===
@@ -117,6 +118,7 @@ do
     # 만약 파일을 읽어오는 거면 "< filename.txt" 사용
 done <<< "$TOP_IPS"
 ```
+### 🔧 결과
 ```bash
 [parksejin@localhost quests]$ source connectlog.sh network.log
 === 접속 빈도 TOP 3 ===
@@ -168,6 +170,7 @@ else
         echo "[오프라인] ($V_PING) - 응답없음"
 fi
 ```
+### 🔧 결과
 ```bash
 [mk@192.168.0.100 ~/parksejin]$ source servers.sh 192.168.0.4
 === 서버 상태 점검 결과 ===
@@ -234,6 +237,7 @@ echo -e "=== 트래픽 분석 결과 ===
 [주의 필요 IP 목록]
 $HIGH_IP"
 ```
+### 🔧 결과
 ```bash
 [parksejin@localhost quests]$ source checkconnections.sh connections.txt
 === 트래픽 분석 결과 ===

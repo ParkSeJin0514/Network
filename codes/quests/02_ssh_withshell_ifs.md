@@ -89,7 +89,7 @@ EOF
 - 최고점, 최저점, 평균점수 계산
 - 90점 이상(A), 80점 이상(B), 70점 이상(C), 그 외(D) 등급별 학생 수 출력
 - 평균이 85점 이상이면 "우수", 75점 이상이면 "양호", 그 외는 "보통" 출력
-
+### 🔧 정답
 ```bash
 #!/bin/bash
 
@@ -189,6 +189,7 @@ else
 	echo "종합 평가: 보통 ($AVG점)"
 fi
 ```
+### 🔧 결과
 ```bash
 [parksejin@localhost quests]$ source grade_analyzer.sh students.txt
 input subject : 수학
@@ -351,7 +352,7 @@ Last 5 Log :
 - 원본 그대로 중복 제거 후 빈도수 계산
 - 총 고유 단어 개수 출력
 - 가장 빈도가 높은 단어가 3회 이상 나타나면 "높은 중복도", 2회면 "보통 중복도", 1회면 "낮은 중복도" 출력
-```
+
 ### 🔧 정답
 ```bash
 vi word_frequency.sh
