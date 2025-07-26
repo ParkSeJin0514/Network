@@ -95,17 +95,23 @@ EOF
 
 V_MATH="수학"
 V_ENGLISH="영어"
+V_SCIENCE="과학"
 read -p "input subject : " V_SUBJECT
 
+echo "=== $V_SUBJECT RESULT ==="
 if [ "$V_SUBJECT" = "$V_MATH" ]; then
-        echo "in word! $V_MATH"
+        V_MATH_LINE=$(cut -d ":" -f 3 students.txt | sort -r)
+        echo "$V_MATH_LINE"
 elif [ "$V_SUBJECT" = "$V_ENGLISH" ]; then
-        echo "in word! $V_ENGLISH"
-else
-        echo "not in word!"
-fi
+        V_ENGLISH_LINE=$(cut -d ":" -f 5 students.txt | sort -r)
+        echo "$V_ENGLISH_LINE"
 
-V_MATH_MAX=$(cut -d":" -f 3 students.txt | sort -n | tail -n 1)
+elif [ "$V_SUBJECT" = "$V_SCIENCE" ]; then
+        V_SCIENCE_LINE=$(cut -d ":" -f 7 students.txt | sort -r)
+        echo "$V_SCIENCE_LINE"
+else
+        echo "There is no such subject!"
+fi
 ```
 ### 힌트
 
