@@ -77,18 +77,22 @@ EOF
 ## 📁 문제 1 : 학생 성적 분석기 
 - 파일 : grade_analyzer.sh
 ### 요구사항
-
 - students.txt 파일을 분석하여 다음 기능을 수행하는 스크립트 작성
 - 사용자로부터 과목명을 입력받아 해당 과목의 통계 정보 출력
 - 조건문을 사용하여 입력 검증 및 등급 분류 수행
 
 ### 구현해야 할 기능
-
 - 사용자가 입력한 과목이 유효한지 검사 (수학, 영어, 과학)
 - 해당 과목의 모든 점수를 추출하여 정렬된 목록 출력
 - 최고점, 최저점, 평균점수 계산
 - 90점 이상(A), 80점 이상(B), 70점 이상(C), 그 외(D) 등급별 학생 수 출력
 - 평균이 85점 이상이면 "우수", 75점 이상이면 "양호", 그 외는 "보통" 출력
+
+### 힌트
+- cut, grep, sort, wc 명령어 활용
+- 파이프라인으로 명령어 연결
+- 조건문으로 점수 범위 검사
+
 ### 🔧 정답
 ```bash
 #!/bin/bash
@@ -220,29 +224,22 @@ D (그 외): 0 명
 [평가]
 종합 평가: 우수 (86점)
 ```
-### 힌트
-
-- cut, grep, sort, wc 명령어 활용
-- 파이프라인으로 명령어 연결
-- 조건문으로 점수 범위 검사
 
 ## 📁 문제 2 : 서버 로그 모니터링 도구
 - 파일 : log_monitor.sh
 ### 요구사항
-
 - server_logs.txt 파일을 분석하여 로그 수준별 통계 및 문제 상황 감지
 조건문을 사용하여 경고 수준 결정
 
 ### 구현해야 할 기능
-
 - 전체 로그 라인 수 출력
 - ERROR, WARNING, INFO 각각의 개수 계산 및 출력
 - ERROR 로그만 별도 파일(errors.log)로 저장
 - 가장 많이 발생한 ERROR 유형 찾기 (중복 제거 후 개수 확인)
 - ERROR 비율이 30% 이상이면 "위험", 20% 이상이면 "주의", 그 외는 "정상" 출력
 - 마지막 5개 로그 항목을 시간 역순으로 출력
-### 힌트
 
+### 힌트
 - grep, wc, uniq, sort, tail 명령어 활용
 - 리다이렉션으로 파일 저장
 - 수치 계산을 위한 조건문 사용
@@ -311,12 +308,10 @@ Last 5 Log :
 ## 📁 문제 3 : 판매 데이터 분석 시스템
 - 파일 : sales_analyzer.sh
 ### 요구사항
-
 - sales_data.txt 파일을 분석하여 매출 데이터 통계 생성
 - 사용자 입력에 따른 다양한 분석 결과 제공
 
 ### 구현해야 할 기능
-
 - 사용자로부터 분석 타입 입력받기 (월별/지역별/제품별)
 - 입력값이 유효하지 않으면 사용법 출력 후 종료
 - 선택한 분석 타입에 따라 다음 수행:
@@ -326,20 +321,129 @@ Last 5 Log :
 - 전체 매출액이 1000만원 이상이면 "목표 달성", 800만원 이상이면 "양호", 그 외는 "노력 필요" 출력
 
 ### 힌트
-
 - cut, sort, uniq, grep 명령어 조합
 - 필드 분리를 위한 -d 옵션 활용
 - 조건문으로 분석 타입 분기 처리
 
+```bash
+#!/bin/bash
+
+read -r -p "분석 타입을 선택하세요 (월별/지역별/제품별) : " analysis_type
+
+# 입력값 검증
+if [ "$analysis_type" != "월별" ] && [ "$analysis_type" != "지역별" ] && [ "$analysis_type" != "제품별" ]; then
+    echo "사용법 : 월별, 지역별, 제품별 중 하나를 입력하세요"
+fi
+
+echo "=== $analysis_type 매출 분석 결과 ==="
+
+if [ "$analysis_type" = "월별" ]; then
+    echo "[월별 총 매출액]"
+    cut -d',' -f1,4 sales_data.txt | tr ',' ' ' | sort | cut -d' ' -f1 | uniq > months.tmp
+    
+    for month in $(cat months.tmp); do
+    month_total=0
+    for amount in $(grep "^$month," sales_data.txt | cut -d',' -f4); do
+        month_total=$((month_total + amount))
+    done
+    echo "$month : $month_total원"
+done | sort -k2 -nr
+
+rm months.tmp
+
+elif [ "$analysis_type" = "지역별" ]; then
+    echo "[지역별 총 매출액 및 평균]"
+    cut -d',' -f2 sales_data.txt | sort | uniq > regions.tmp
+    
+    while IFS= read -r region; do
+    	region_total=0
+      	region_count=0
+        while IFS= read -r amount; do
+            region_total=$((region_total + amount))
+            region_count=$((region_count + 1))
+    done < <(grep ",$region," sales_data.txt | cut -d"," -f 4)
+    region_avg=0
+    if [ "$region_count" -gt 0 ]; then
+        region_avg=$((region_total / region_count))
+    fi  
+        echo "$region : 총 $region_total원, 평균 $region_avg원"
+    done < regions.tmp
+
+    rm regions.tmp
+
+else  # 제품별
+    echo "제품별 판매 횟수 및 총 매출액:"
+    cut -d',' -f3 sales_data.txt | sort | uniq > products.tmp
+    
+    for product in $(cat products.tmp); do
+        product_count=$(grep ",$product," sales_data.txt | wc -l)
+        product_total=0
+        for amount in $(grep ",$product," sales_data.txt | cut -d',' -f4); do
+            product_total=$((product_total + amount))
+        done
+        echo "$product : $product_count회 판매, 총 $product_total원"
+    done
+    
+    rm products.tmp
+fi
+
+# 전체 매출액 계산
+total_sales=0
+for amount in $(cut -d',' -f4 sales_data.txt); do
+    total_sales=$((total_sales + amount))
+done
+
+echo "전체 매출액 : $total_sales원"
+
+# 목표 달성도 평가
+if [ $total_sales -ge 10000000 ]; then
+    achievement="목표 달성"
+elif [ $total_sales -ge 8000000 ]; then
+    achievement="양호"
+else
+    achievement="노력 필요"
+fi
+
+echo "달성도: $achievement"
+```
+```bash
+[parksejin@localhost quests]$ source sales_analyzer.sh
+분석 타입을 선택하세요 (월별/지역별/제품별) : 월별
+=== 월별 매출 분석 결과 ===
+[월별 총 매출액]
+2024-03 : 3680000원
+2024-02 : 4370000원
+2024-01 : 3750000원
+전체 매출액 : 11800000원
+달성도: 목표 달성
+```
+```bash
+[parksejin@localhost quests]$ source sales_analyzer.sh
+분석 타입을 선택하세요 (월별/지역별/제품별) : 지역별
+=== 지역별 매출 분석 결과 ===
+[지역별 총 매출액 및 평균]
+서울 : 총 5310000원, 평균 1062000원
+부산 : 총 3630000원, 평균 907500원
+대구 : 총 2860000원, 평균 953333원
+서울 : 총 5310000원, 평균 1062000원
+부산 : 총 3630000원, 평균 907500원
+서울 : 총 5310000원, 평균 1062000원
+대구 : 총 2860000원, 평균 953333원
+서울 : 총 5310000원, 평균 1062000원
+부산 : 총 3630000원, 평균 907500원
+대구 : 총 2860000원, 평균 953333원
+서울 : 총 5310000원, 평균 1062000원
+부산 : 총 3630000원, 평균 907500원
+전체 매출액 : 11800000원
+달성도: 목표 달성
+```
 ## 📁 문제 4 : 단어 빈도 분석기
 - 파일 word_frequency.sh
 ### 요구사항
-
 - words.txt 파일의 단어들을 분석하여 빈도수 계산
 - 대소문자 처리 옵션 제공
 
 ### 구현해야 할 기능
-
 - 사용자로부터 대소문자 구분 여부 입력받기 (y/n)
 - 입력값 검증 (y 또는 n이 아니면 재입력 요구)
 - 대소문자 구분하지 않는 경우
@@ -348,10 +452,14 @@ Last 5 Log :
 - 빈도수 기준 내림차순 정렬
 
 #### 대소문자 구분하는 경우
-
 - 원본 그대로 중복 제거 후 빈도수 계산
 - 총 고유 단어 개수 출력
 - 가장 빈도가 높은 단어가 3회 이상 나타나면 "높은 중복도", 2회면 "보통 중복도", 1회면 "낮은 중복도" 출력
+
+### 힌트
+- tr, sort, uniq, wc 명령어 활용
+- 대소문자 변환을 위한 tr A-Z a-z
+- 조건문으로 사용자 선택 처리
 
 ### 🔧 정답
 ```bash
@@ -415,8 +523,3 @@ fi
 대소문자를 구분하시겠습니까? y or n : u
 재입력하세요!
 ```
-### 힌트
-
-- tr, sort, uniq, wc 명령어 활용
-- 대소문자 변환을 위한 tr A-Z a-z
-- 조건문으로 사용자 선택 처리
