@@ -148,46 +148,49 @@ V_TOTAL_LOG_LINE=$(wc -l < "$V_LOG_FILE")
 echo "Total Log Line : $V_TOTAL_LOG_LINE"
 
 # "server_logs.txt" 를 읽어온 후 "ERROR, WARNING" 을 찾은 후 출력
-V_ERROR_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "ERROR" | sort | wc -w)
-V_WARNING_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "WARNING" | sort | uniq -c | wc -w)
+V_ERROR_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "ERROR" | wc -l)
+V_WARNING_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "WARNING" | wc -l)
+V_INFO_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "INFO" | wc -l)
+
 echo "ERROR : $V_ERROR_LOG"
 echo "WARNING : $V_WARNING_LOG"
+echo "INFO : $V_INFO_LOG"
 
 # "ERROR" 찾은 후 "errors.log" 에 저장
 grep "ERROR" "$V_LOG_FILE" > errors.log
 
 # "errors.log" 에서 제일 많이 "ERROR" 가 나온 한 줄 출력
-echo "Most ERROR : " && cut -d" " -f 4- errors.log | sort | uniq -c | sort -nr | head -n 1
+V_MOST_ERROR=$(cut -d" " -f 4- errors.log | sort | uniq -c | sort -nr | head -n 1 | awk '{$1=$1; print}')
+echo "MOST ERROR : $V_MOST_ERROR"
 
-echo "Situation : " && if [ "$V_RATE" -ge 30 ]; then
-        echo "DANGEROUS"
+V_RATE=$((V_ERROR_LOG * 100 / V_TOTAL_LOG_LINE))
+
+if [ "$V_RATE" -ge 30 ]; then
+        echo "ERROR STATUS : DANGER"
 elif [ "$V_RATE" -ge 20 ]; then
-        echo "WARNING"
+        echo "ERROR STATUS : CAUTION"
 else
-        echo "GOOD"
+        echo "ERROR STATUS : NORMAL"
 fi
 
 # 로그 역순 정렬 후 마지막 줄부터 5줄 출력
-echo "Last 5 Log : " && cut -d" " -f 2- "$V_LOG_FILE" | sort -r | tail -n 5
+echo "Last 5 Log : " && cut -d" " -f 2- "$V_LOG_FILE" | sort -r | head -n 5
 ```
 ### 🔧 결과
 ```bash
 [yhc@192.168.0.51 ~/shell_practice]$ source log_monitor.sh 
-Log Line Output : 12
-ERROR, WARNING, INFO Output : 
-      5 ERROR
-      5 INFO
-      2 WARNING
-Most ERROR : 
-      2 Database connection failed
-Situation : 
-DANGEROUS
+Total Log Line : 12
+ERROR : 5
+WARNING : 2
+INFO : 5
+MOST ERROR : 2 Database connection failed
+ERROR STATUS : DANGER
 Last 5 Log : 
-10:34:25 ERROR Authentication failed: user003
-10:33:18 WARNING Memory usage high: 85%
-10:32:05 INFO User login successful: user002
-10:31:22 ERROR Database connection failed
-10:30:15 INFO User login successful: user001
+10:41:35 ERROR Authentication failed: user005
+10:40:28 INFO User login successful: user004
+10:39:15 ERROR Database connection failed
+10:38:52 WARNING Disk space low: 90%
+10:37:45 INFO System backup started
 ```
 ## 📁 문제 3 : 판매 데이터 분석 시스템
 - 파일 : sales_analyzer.sh
