@@ -2,7 +2,7 @@
 ## 💻 문제 환경 설정
 - 실습을 위해 다음 파일들을 생성하세요
 ## 🔹 1. 네트워크 로그 파일 생성
-```
+```bash
 cat > network.log << 'EOF'
 2024-01-15 10:30:25 192.168.1.100 CONNECT success
 2024-01-15 10:30:30 192.168.1.101 CONNECT failed
@@ -16,7 +16,7 @@ EOF
 ```
 
 ## 🔹 3. 접속 통계 파일 생성
-```
+```bash
 cat > connections.txt << 'EOF'
 192.168.1.100 5
 192.168.1.101 12
@@ -45,7 +45,7 @@ EOF
 - 파일명은 스크립트 실행 시 첫 번째 인자로 받기
 
 ### 🔧 정답
-```
+```bash
 #!/bin/bash
 
 V_NETLOG="network.log"
@@ -60,7 +60,7 @@ echo "성공: $TOTAL_SUC건"
 echo "실패: $TOTAL_FAIL건"
 echo "성공률: $TOTAL_AVG%"
 ```
-```
+```bash
 [parksejin@localhost quests]$ source searchlog.sh
 === 네트워크 연결 분석 결과 ===
 전체 연결 시도: 8건
@@ -86,40 +86,27 @@ echo "성공률: $TOTAL_AVG%"
 - head나 tail로 결과 제한
 
 ### 🔧 정답
-```
-#!/bash/bash
+```bash
+#!/bin/bash
 
-V_LINE1=$(cut -d" " -f3 $1 | sort | uniq -c | sort -nr | sed -n '1p')
-V_LINE2=$(cut -d" " -f3 $1 | sort | uniq -c | sort -nr | sed -n '2p')
-V_LINE3=$(cut -d" " -f3 $1 | sort | uniq -c | sort -nr | sed -n '3p')
+FILE="$1"
 
 echo "=== 접속 빈도 TOP 3 ==="
-
-if [ -n "$V_LINE1" ]; then
-        V_L1=$(echo "$V_LINE1" | tr -s " ")
-        V_COUNT1=$(echo "$V_L1" | cut -d" " -f 2)
-        V_IP1=$(echo "$V_L1" | cut -d" " -f 3)
-        V_FIRST=$(grep "$V_IP1" $1 | head -1 | cut -d" " -f2)
-        echo "1위: $V_IP1 (${V_COUNT1}회) - 첫 접속: $V_FIRST"
-fi
-
-if [ -n "$V_LINE2" ]; then
-        V_L2=$(echo "$V_LINE2" | tr -s " ")
-        V_COUNT2=$(echo "$V_L2" | cut -d" " -f 2)
-        V_IP2=$(echo "$V_L2" | cut -d" " -f 3)
-        V_SECOND=$(grep "$V_IP2" $1 | head -1 | cut -d" " -f2)
-        echo "2위: $V_IP2 (${V_COUNT2}회) - 첫 접속: $V_SECOND"
-fi
-
-if [ -n "$V_LINE2" ]; then
-        V_L3=$(echo "$V_LINE3" | tr -s " ")
-        V_COUNT3=$(echo "$V_L3" | cut -d" " -f 2)
-        V_IP3=$(echo "$V_L3" | cut -d" " -f 3)
-        V_THIRD=$(grep "$V_IP3" $1 | head -1 | cut -d" " -f2)
-        echo "3위: $V_IP3 (${V_COUNT3}회) - 첫 접속: $V_THIRD"
-fi
+# 받은 파일을 공백 기준 3번째 필드 추출 후 uniq -c 로 정렬 후 상위 3개의 결과 출력
+TOP_IPS=$(cut -d" " -f3 "$FILE" | sort | uniq -c | sort -nr | head -n 3)
+# 순위를 매기기 위한 초기 값
+RANK=1
+# While 문은 공백을 구분자로 사용하기 때문에 '2 192.168.0.102'를 COUNT=2와 IP=192.168.0.102 변수로 지정
+# <<< "$TOP_IPS"를 이용하여 "$TOP_IPS"의 변수 내용을 표준 입력처럼 처리하여 루프 실행
+while read COUNT IP
+do
+    COUNT=$(echo "$COUNT" | tr -d " ")
+    FIRST_TIME=$(grep "$IP" "$FILE" | head -1 | cut -d" " -f2)
+    echo "${RANK}위: $IP (${COUNT}회) - 첫 접속: $FIRST_TIME"
+    RANK=$((RANK + 1))
+done <<< "$TOP_IPS"
 ```
-```
+```bash
 [parksejin@localhost quests]$ source connectlog.sh network.log
 === 접속 빈도 TOP 3 ===
 1위: 192.168.1.102 (2회) - 첫 접속: 10:31:15
@@ -150,7 +137,7 @@ OR
 
 ### 🔧 정답
 
-```
+```bash
 #!/bin/bash
 
 V_PING="$1"
@@ -165,7 +152,7 @@ else
         echo "[오프라인] ($V_PING) - 응답없음"
 fi
 ```
-```
+```bash
 [mk@192.168.0.100 ~/parksejin]$ source servers.sh 192.168.0.4
 === 서버 상태 점검 결과 ===
 [정상] (192.168.0.4) - 응답시간 : time=1.11ms
@@ -195,7 +182,7 @@ fi
 - cut, sort 명령어 활용
 - 숫자 비교를 위한 조건문 사용
 ### 🔧 정답
-```
+```bash
 #!/bin/bash
 
 V_CHECK="$1"
@@ -230,7 +217,7 @@ echo -e "=== 트래픽 분석 결과 ===
 [주의 필요 IP 목록]
 "$HIGH_IP""
 ```
-```
+```bash
 [parksejin@localhost quests]$ source checkconnections.sh connections.txt
 === 트래픽 분석 결과 ===
 높음(10회 이상): 2개
