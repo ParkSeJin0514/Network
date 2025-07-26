@@ -99,15 +99,16 @@ V_SCIENCE="과학"
 read -p "input subject : " V_SUBJECT
 
 echo "=== $V_SUBJECT RESULT ==="
+
 if [ "$V_SUBJECT" = "$V_MATH" ]; then
-        V_MATH_LINE=$(cut -d ":" -f 3 students.txt | sort -r)
+        V_MATH_LINE=$(cut -d ":" -f 3 $1 | sort -r)
         echo "$V_MATH_LINE"
 elif [ "$V_SUBJECT" = "$V_ENGLISH" ]; then
-        V_ENGLISH_LINE=$(cut -d ":" -f 5 students.txt | sort -r)
+        V_ENGLISH_LINE=$(cut -d ":" -f 5 $1 | sort -r)
         echo "$V_ENGLISH_LINE"
 
 elif [ "$V_SUBJECT" = "$V_SCIENCE" ]; then
-        V_SCIENCE_LINE=$(cut -d ":" -f 7 students.txt | sort -r)
+        V_SCIENCE_LINE=$(cut -d ":" -f 7 $1 | sort -r)
         echo "$V_SCIENCE_LINE"
 else
         echo "There is no such subject!"
