@@ -147,7 +147,7 @@ V_LOG_FILE="server_logs.txt"
 V_TOTAL_LOG_LINE=$(wc -l < "$V_LOG_FILE")
 echo "Total Log Line : $V_TOTAL_LOG_LINE"
 
-# "server_logs.txt" 를 읽어온 후 "ERROR, WARNING" 을 찾은 후 출력
+# "server_logs.txt" 를 읽어온 후 "ERROR, WARNING, INFO"  찾은 후 출력
 V_ERROR_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "ERROR" | wc -l)
 V_WARNING_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "WARNING" | wc -l)
 V_INFO_LOG=$(cut -d" " -f 3 "$V_LOG_FILE" | grep -i "INFO" | wc -l)
@@ -160,11 +160,14 @@ echo "INFO : $V_INFO_LOG"
 grep "ERROR" "$V_LOG_FILE" > errors.log
 
 # "errors.log" 에서 제일 많이 "ERROR" 가 나온 한 줄 출력
+# "awk '{$1=$1; print}' 를 이용하여 맨 앞의 숫자를 제거하지 않고 공백을 없앤 후 출력
 V_MOST_ERROR=$(cut -d" " -f 4- errors.log | sort | uniq -c | sort -nr | head -n 1 | awk '{$1=$1; print}')
 echo "MOST ERROR : $V_MOST_ERROR"
 
+# 총 로그 중 에러 비율 계산
 V_RATE=$((V_ERROR_LOG * 100 / V_TOTAL_LOG_LINE))
 
+# 비율이 30% 이상이면 "DANGER", 20% 이상이면 "CAUTION", 그 미만이면 "NORMAL" 출력
 if [ "$V_RATE" -ge 30 ]; then
         echo "ERROR STATUS : DANGER"
 elif [ "$V_RATE" -ge 20 ]; then
