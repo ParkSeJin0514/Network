@@ -246,9 +246,6 @@ D (그 외): 0 명
 
 ### 🔧 정답
 ```bash
-[yhc@192.168.0.51 ~/shell_practice]$ vi log_monitor.sh
-```
-```bash
 #!/bin/bash
 
 V_LOG_FILE="server_logs.txt"
@@ -324,7 +321,7 @@ Last 5 Log :
 - cut, sort, uniq, grep 명령어 조합
 - 필드 분리를 위한 -d 옵션 활용
 - 조건문으로 분석 타입 분기 처리
-
+### 🔧 정답
 ```bash
 #!/bin/bash
 
@@ -405,6 +402,7 @@ fi
 
 echo "달성도: $achievement"
 ```
+### 🔧 결과
 ```bash
 [parksejin@localhost quests]$ source sales_analyzer.sh
 분석 타입을 선택하세요 (월별/지역별/제품별) : 월별
