@@ -24,14 +24,13 @@ ssh user@192.168.0.101  # 컴퓨터1 (comp1 디렉토리 실습)
 ssh user@192.168.0.102  # 컴퓨터2 (comp2 디렉토리 실습)
 ssh user@192.168.0.103  # 컴퓨터3 (comp3 디렉토리 실습)
 ```
-## 🔧 실습 문제 (난이도 순)
-
 ## 🔹 실습 1. (기초 : Read & Search) – comp2/todo.txt
 ### 🔧 목표 : 복사, 붙여넣기 숙달
 - 작업 경로 : ~/vim_crud_practice/comp2/todo.txt
 - vim으로 파일 열기
 - Buy groceries 줄을 복사한 뒤, 맨 아래에 두 번 붙여넣기
 - 저장 후 종료
+### 🔧 정답
 ```bash
 [parksejin@192.168.0.50 ~]$ ssh kangbeenlee@192.168.0.53
 kangbeenlee@192.168.0.53 `s password : qwer1234
@@ -39,6 +38,7 @@ Activate the web console with: systemctl enable --now cockpit.socket
 
 Last login: Thu Jul 24 15:30:20 2025 from 192.168.0.3
 ```
+### 🔧 결과
 ```bash
 [kangbeenlee@192.168.0.53 ~/vim_crud_practice/comp2]$ cat todo.txt
 1. Clean the house
@@ -60,6 +60,7 @@ Last login: Thu Jul 24 15:30:20 2025 from 192.168.0.3
 Durian  
 Elderberry
 ```
+### 🔧 정답
 ```bash
 [parksejin@192.168.0.50 ~]$ ssh guinjung@192.168.0.59
 guinjung@192.168.0.59`s password: 
@@ -68,6 +69,7 @@ Activate the web console with: systemctl enable --now cockpit.socket
 Last login: Thu Jul 24 15:27:16 2025 from 192.168.0.41
 [guinjung@192.168.0.59 ~]$ 
 ```
+### 🔧 결과
 ```bash
 [guinjung@192.168.0.59 ~/vim_crud_practice/comp1]$ cat fruits.txt 
 Apple
@@ -83,6 +85,7 @@ Elderberry
 - john@example.com → john.doe@gmail.com으로 수정
 - 수정한 라인을 복사한 후 아래 줄에 3번 반복 붙여넣기
 - 저장 후 종료
+### 🔧 정답
 ```bash
 [parksejin@192.168.0.50 ~]$ ssh ohjimin@192.168.0.4
 ohjimin@192.168.0.4`s password: 
@@ -90,6 +93,7 @@ Activate the web console with: systemctl enable --now cockpit.socket
 
 Last login: Thu Jul 24 15:26:59 2025 from 192.168.0.3
 ```
+### 🔧 결과
 ```bash
 [ohjimin@192.168.12.129 ~/vim_crud_practice/comp3]$ cat users.csv 
 Name,Email
@@ -109,6 +113,7 @@ John Doe,john.doe@gmail.com
 - 작업 경로 : ~/vim_crud_practice/comp1/fruits.txt
 - Cherry 해당 줄을 삭제
 - 저장 후 종료
+### 🔧 정답
 ```bash
 [parksejin@192.168.0.50 ~]$ ssh im@192.168.0.31
 im@192.168.0.31`s password: 
@@ -116,8 +121,8 @@ Activate the web console with: systemctl enable --now cockpit.socket
 
 Last login: Thu Jul 24 15:45:16 2025 from 192.168.0.53
 ```
+### 🔧 결과
 ```bash
-[im@192.168.0.31 ~/vim_crud_practice/comp1]$ vi fruits.txt 
 [im@192.168.0.31 ~/vim_crud_practice/comp1]$ cat fruits.txt 
 Apple
 Banana
@@ -129,6 +134,7 @@ Banana
 - 모든 Doe → Smith로 전체 치환
 - 실수로 한 줄을 삭제한 뒤, 삭제된 줄 복구
 - 저장 후 종료
+### 🔧 정답
 ```bash
 [parksejin@192.168.0.50 ~]$ ssh shinbeomjun@192.168.0.34
 shinbeomjun@192.168.0.34`s password: 
@@ -137,6 +143,7 @@ Activate the web console with: systemctl enable --now cockpit.socket
 Last login: Thu Jul 24 15:38:08 2025 from 192.168.0.46
 범준바보
 ```
+### 🔧 결과
 ```bash
 [shinbeomjun@192.168.0.34 ~/vim_crud_practice/comp3]$ vi users.csv 
 [shinbeomjun@192.168.0.34 ~/vim_crud_practice/comp3]$ cat users.csv 
