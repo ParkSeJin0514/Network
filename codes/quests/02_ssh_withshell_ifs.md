@@ -341,6 +341,7 @@ if [ "$analysis_type" = "월별" ]; then
     echo "[월별 총 매출액]"
     cut -d',' -f1,4 sales_data.txt | tr ',' ' ' | sort | cut -d' ' -f1 | uniq > months.tmp
     
+    # "cat month.tmp" 를 읽고 "month" 에 저장 후 월과 총액 출력
     for month in $(cat months.tmp); do
     month_total=0
     for amount in $(grep "^$month," sales_data.txt | cut -d',' -f4); do
@@ -351,27 +352,25 @@ done | sort -k2 -nr
 
 rm months.tmp
 
+# 지역별 총액과 평균 출력
 elif [ "$analysis_type" = "지역별" ]; then
-    echo "[지역별 총 매출액 및 평균]"
+    echo "지역별 총 매출액 및 평균:"
     cut -d',' -f2 sales_data.txt | sort | uniq > regions.tmp
-    
-    while IFS= read -r region; do
-    	region_total=0
-      	region_count=0
-        while IFS= read -r amount; do
+
+    for region in $(cat regions.tmp); do
+        region_total=0
+        region_count=0
+        for amount in $(grep ",$region," sales_data.txt | cut -d',' -f4); do
             region_total=$((region_total + amount))
             region_count=$((region_count + 1))
-    done < <(grep ",$region," sales_data.txt | cut -d"," -f 4)
-    region_avg=0
-    if [ "$region_count" -gt 0 ]; then
+        done
         region_avg=$((region_total / region_count))
-    fi  
         echo "$region : 총 $region_total원, 평균 $region_avg원"
-    done < regions.tmp
+    done
 
     rm regions.tmp
 
-else  # 제품별
+else  # 제품별 판매 횟수와 총액 출력
     echo "제품별 판매 횟수 및 총 매출액:"
     cut -d',' -f3 sales_data.txt | sort | uniq > products.tmp
     
