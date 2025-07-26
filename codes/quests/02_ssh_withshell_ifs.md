@@ -93,26 +93,131 @@ EOF
 ```bash
 #!/bin/bash
 
+# 사용 가능 과목명
 V_MATH="수학"
 V_ENGLISH="영어"
 V_SCIENCE="과학"
+
+# 사용자 입력
 read -p "input subject : " V_SUBJECT
 
-echo "=== $V_SUBJECT RESULT ==="
-
+# 유효성 검사 및 과목 필드 번호 지정
+# "FIELD" 를 이용하여 "cut" 대신 해서 점수 추출
 if [ "$V_SUBJECT" = "$V_MATH" ]; then
-        V_MATH_LINE=$(cut -d ":" -f 3 $1 | sort -r)
-        echo "$V_MATH_LINE"
+    FIELD=3
 elif [ "$V_SUBJECT" = "$V_ENGLISH" ]; then
-        V_ENGLISH_LINE=$(cut -d ":" -f 5 $1 | sort -r)
-        echo "$V_ENGLISH_LINE"
-
+    FIELD=5
 elif [ "$V_SUBJECT" = "$V_SCIENCE" ]; then
-        V_SCIENCE_LINE=$(cut -d ":" -f 7 $1 | sort -r)
-        echo "$V_SCIENCE_LINE"
+    FIELD=7
 else
-        echo "There is no such subject!"
+    echo "There is no such subject!"
 fi
+
+# 점수 추출 및 정렬
+# 여기서 중요한건 "$FIELD" 가 변수 정의가 되지 않았는데 실행이 되는 이유는 if문에서 "수학" 을 받았을 때 "FIELD=3" 이 동작하면서 자동으로 변수로 지정
+# 지정된 "FIELD=3" 은 "V_SCORES" 에서 수학에 대한 점수를 자동으로 "3" 으로 추출
+V_SCORES=$(cut -d ":" -f $FIELD "$1" | sort -nr)
+echo "=== $V_SUBJECT RESULT ==="
+echo "[정렬된 점수 목록]"
+echo "$V_SCORES"
+
+# 점수 계산을 위한 준비
+TOTAL=0
+COUNT=0
+A=0
+B=0
+C=0
+D=0
+MAX=0
+MIN=100
+
+# read : 표준 입력으로부터 한 줄을 읽어 변수에 저장
+# -r : 줄 바꿈을 특수 문자로 해석하지 않고 그대로 읽도록 함
+while read -r SCORE
+do
+    # 총합 및 개수
+    TOTAL=$((TOTAL + SCORE))
+    COUNT=$((COUNT + 1))
+
+    # 최고점, 최저점 갱신
+    if [ "$SCORE" -gt "$MAX" ]; then
+        MAX=$SCORE
+    fi
+    if [ "$SCORE" -lt "$MIN" ]; then
+        MIN=$SCORE
+    fi
+
+    # 등급 분류
+    # "A=$((A + 1))" 을 이용해서 "A=0" 에서 점수에 따라 누적 후 출력
+    if [ "$SCORE" -ge 90 ]; then
+        A=$((A + 1))
+    elif [ "$SCORE" -ge 80 ]; then
+        B=$((B + 1))
+    elif [ "$SCORE" -ge 70 ]; then
+        C=$((C + 1))
+    else
+        D=$((D + 1))
+    fi
+    # 파일을 읽어오는게 아닌 변수에 있는 문자열을 읽어오기 때문에 "<<<" 사용
+done <<< "$V_SCORES"
+
+# 평균 계산
+AVG=$((TOTAL / COUNT))
+
+# 결과 출력
+echo
+echo "[통계 정보]"
+echo "최고점수: $MAX"
+echo "최저점수: $MIN"
+echo "평균점수: $AVG"
+
+echo
+echo "[등급별 학생 수]"
+echo "A (90점 이상): $A 명"
+echo "B (80점 이상): $B 명"
+echo "C (70점 이상): $C 명"
+echo "D (그 외): $D 명"
+
+# 종합 평가 우수, 양호, 보통 출력
+echo
+echo "[평가]"
+if [ "$AVG" -ge 85 ]; then
+	echo "종합 평가: 우수 ($AVG점)"
+elif [ "$AVG" -ge 75 ]; then
+	echo "종합 평가: 양호 ($AVG점)"
+else
+	echo "종합 평가: 보통 ($AVG점)"
+fi
+```
+```bash
+[parksejin@localhost quests]$ source grade_analyzer.sh students.txt
+input subject : 수학
+=== 수학 RESULT ===
+[정렬된 점수 목록]
+97
+95
+92
+88
+86
+85
+83
+81
+79
+76
+
+[통계 정보]
+최고점수: 97
+최저점수: 76
+평균점수: 86
+
+[등급별 학생 수]
+A (90점 이상): 3 명
+B (80점 이상): 5 명
+C (70점 이상): 2 명
+D (그 외): 0 명
+
+[평가]
+종합 평가: 우수 (86점)
 ```
 ### 힌트
 
