@@ -49,9 +49,13 @@ EOF
 #!/bin/bash
 
 V_NETLOG="network.log"
+# "network.log" 에서 몇 줄인지 출력
 TOTAL_LINE=$(wc -l < "$V_NETLOG")
+# success 줄 출력
 TOTAL_SUC=$(cut -d" " -f 5 < "$V_NETLOG" | grep "success" | wc -l)
+# failed 줄 출력
 TOTAL_FAIL=$(cut -d" " -f 5 < "$V_NETLOG" | grep "failed" | wc -l)
+# "$(())" 를 이용하여 산수가 되게 변경 후 성공률 출력
 TOTAL_AVG=$(($TOTAL_SUC * 100 / $TOTAL_LINE))
 
 echo "=== 네트워크 연결 분석 결과 ==="
@@ -92,18 +96,19 @@ echo "성공률: $TOTAL_AVG%"
 FILE="$1"
 
 echo "=== 접속 빈도 TOP 3 ==="
-# 받은 파일을 공백 기준 3번째 필드 추출 후 uniq -c 로 정렬 후 상위 3개의 결과 출력
+# 받은 파일을 공백 기준 3번째 필드 추출 후 "uniq -c" 로 정렬 후 상위 3개의 결과 출력
 TOP_IPS=$(cut -d" " -f3 "$FILE" | sort | uniq -c | sort -nr | head -n 3)
 # 순위를 매기기 위한 초기 값
 RANK=1
-# While 문은 공백을 구분자로 사용하기 때문에 '2 192.168.0.102'를 COUNT=2와 IP=192.168.0.102 변수로 지정
-# <<< "$TOP_IPS"를 이용하여 "$TOP_IPS"의 변수 내용을 표준 입력처럼 처리하여 루프 실행
+# While 문은 공백을 구분자로 사용하기 때문에 "2 192.168.0.102" 를 "COUNT=2" 와 "IP=192.168.0.102" 변수로 지정
 while read COUNT IP
 do
     COUNT=$(echo "$COUNT" | tr -d " ")
     FIRST_TIME=$(grep "$IP" "$FILE" | head -1 | cut -d" " -f2)
     echo "${RANK}위: $IP (${COUNT}회) - 첫 접속: $FIRST_TIME"
     RANK=$((RANK + 1))
+    # <<< "$TOP_IPS" 를 이용하는 이유는 예시로 "$TOP_IPS" 안에 "2 192.168.1.102" 이 있으면 파일이 아닌 문자열로 되어있기 때문에 "<<< $TOP_IPS" 사용
+    # 만약 파일을 읽어오는 거면 "< filename.txt" 사용
 done <<< "$TOP_IPS"
 ```
 ```bash
@@ -141,11 +146,14 @@ OR
 #!/bin/bash
 
 V_PING="$1"
+# 핑을 한 번 출력
 V_PING_CHECK=$(ping -c 1 "$V_PING")
+# 출력한 핑에서 "time=" 을 이용하여 시간 출력
 V_PING_TIME=$(echo "$V_PING_CHECK" | grep "time=" | cut -d" " -f 7)
 
 echo "=== 서버 상태 점검 결과 ==="
-
+# 출력한 핑에서 "1 received" 를 찾은 후 있으면 정상 출력
+# 없으면 오프라인 출력
 if echo "$V_PING_CHECK" | grep -q "1 received"; then
         echo "[정상] ($V_PING) - 응답시간 : "$V_PING_TIME"ms"
 else
@@ -186,36 +194,34 @@ fi
 #!/bin/bash
 
 V_CHECK="$1"
+# HIGH, MEDIUM, LOW를 0으로 변수 지정
 HIGH=0
 MEDIUM=0
 LOW=0
+# 변수 "HIGH" 에 해당하는 IP 리스트를 저장할 빈 문자열로 초기화
 HIGH_IP=""
-
-while read V_LINE_CHECK
+# "while read" 를 이용하여 공백을 기준으로 구분하여 예시로 "192.168.1.102 12" 를 "V_IP=192.168.1.101", "V_LINE=12" 로 자동으로 나눠 저장
+while read V_IP V_LINE
 do
-        V_LINE=$(echo "$V_LINE_CHECK" | cut -d" " -f 2)
-        V_IP=$(echo "$V_LINE_CHECK" | cut -d" " -f 1)
-
         if [ "$V_LINE" -ge 10 ]; then
-                HIGH="$(( HIGH+1 ))"
-
-                HIGH_IP="${HIGH_IP}${V_IP} ("$V_LINE"회)\n"
-
-        elif [ "$V_LINE" -ge 5 ] && [ "$V_LINE" -le 9 ]; then
-                MEDIUM="$(( MEDIUM+1 ))"
-
-        elif [ "$V_LINE" -le 4 ]; then
-                LOW="$(( LOW+1 ))"
+                HIGH=$((HIGH + 1))
+                # 기존에 저장된 문자열 "HIGH_IP" 내용 뒤에 루프를 돌려서 새로 발견된 IP 주조와 접속 횟수를 append 해서 누적시킴
+                # "${HIGH_UP}" 가 없으면 매번 새로 할당하기 때문에 이전 저장한 값이 사라져 마지막 IP 정보만 남게 되어 한 줄만 출력됨
+                HIGH_IP="${HIGH_IP}${V_IP} (${V_LINE}회)\n"
+        elif [ "$V_LINE" -ge 5 ]; then
+                MEDIUM=$((MEDIUM + 1))
+        else
+                LOW=$((LOW + 1))
         fi
 done < "$V_CHECK"
 
 echo -e "=== 트래픽 분석 결과 ===
-높음(10회 이상): "$HIGH"개
-보통(5-9회): "$MEDIUM"개
-낮음(4회 이하): "$LOW"개
+높음(10회 이상) : $HIGH개
+보통(5-9회) : $MEDIUM개
+낮음(4회 이하) : $LOW개
 
 [주의 필요 IP 목록]
-"$HIGH_IP""
+$HIGH_IP"
 ```
 ```bash
 [parksejin@localhost quests]$ source checkconnections.sh connections.txt
