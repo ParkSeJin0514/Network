@@ -139,7 +139,6 @@ V_MATH_MAX=$(cut -d":" -f 3 students.txt | sort -n | tail -n 1)
 [yhc@192.168.0.51 ~/shell_practice]$ vi log_monitor.sh
 ```
 ```bash
-# vi
 #!/bin/bash
 
 V_LOG_FILE="server_logs.txt"
@@ -240,7 +239,6 @@ Last 5 Log :
 vi word_frequency.sh
 ```
 ```bash
-# vi
 #!/bin/bash
 
 v_file="$1"
