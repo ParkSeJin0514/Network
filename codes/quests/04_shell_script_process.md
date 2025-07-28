@@ -40,10 +40,12 @@ elif [ "$1" = "stop" ]; then
         echo "서버가 종료되었습니다."
 elif [ "$1" = "restart" ]; then
         kill -9 $PID
+        sleep 2
         $CMD > server.log 2>&1 &
         echo "서버가 다시 시작합니다."
 elif [ "$1" = "server.log" ]; then
-        cat < server.log
+        tail -f < server.log
+else "올바른 명령어를 입력하세요"
 fi
 ```
 ### 🔧 결과
