@@ -19,7 +19,7 @@ $ ./webserver.sh stop
 $ ./webserver.sh tail_log
 … log message 확인
 
-문제 모두 조건에 따라:
+문제 모두 조건에 따라
 if [ "$1" == "start" ] 식으로 흐름 제어
 변수 PORT, PID, LOGFILE 등을 정의해 구성 가능
 ```
