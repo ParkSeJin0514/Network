@@ -31,11 +31,6 @@ if [ "$1" == "start" ] 식으로 흐름 제어
 #!/bin/bash
 
 CMD="nohup python3 -m http.server 8000 --bind 0.0.0.0"
-start="$1"
-stop="$1"
-status="$1"
-restart="$1"
-tail_log="$1"
 
 if [ "$1" = "start" ]; then
         $CMD > server.log 2>&1 &
