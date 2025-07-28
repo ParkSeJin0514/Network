@@ -45,7 +45,7 @@ elif [ "$1" = "restart" ]; then
         echo "서버가 다시 시작합니다."
 elif [ "$1" = "server.log" ]; then
         tail -f < server.log
-else "올바른 명령어를 입력하세요"
+else "올바른 명령어를 입력하세요!"
 fi
 ```
 ### 🔧 결과
@@ -70,4 +70,8 @@ fi
 ```
 [parksejin@192.168.0.50 ~/Downloads/webroot]$ source webserver.sh server.log
 nohup: ignoring input
+```
+```
+[parksejin@192.168.0.50 ~/Downloads/webroot]$ source webserver.sh  dd
+올바른 명령어를 입력하세요!
 ```
