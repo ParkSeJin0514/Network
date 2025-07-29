@@ -14,9 +14,12 @@ $ sudo ./problem1.sh
 ```
 ### 🔧 정답
 ```bash
+# "rules" 에서 포트 조회
 CHECK="192.168.0.51"
 RULES=$(sudo firewall-cmd --list-rich-rules | cut -d'"' -f 4)
 
+# "$CHECK" 와 "$RULES" 가 같으면 추가 작업 X
+# "$CHECK" 와 "$RULES" 가 같지 않으면 차단 추가 후 리로드
 if [ "$CHECK" = "$RULES" ]; then
         echo "[INFO] $CHECK은 이미 차단되어 있습니다."
         echo "[SKIP] 추가 작업을 수행하지 않습니다."
@@ -100,6 +103,8 @@ problem3.sh
 V_IP="12.168.0.31"
 V_PORT="8080"
 
+# "$V_PORT" 를 이용하여 8080을 찾은 후 표준 출력과 에러를 "/dev/null"로 보냄
+# 그 후 "rules" 추가
 if [ -n "$(sudo firewall-cmd --list-ports | grep "$V_PORT")" ]; then
         echo "[INFO] $V_PORT 서비스가 열려 있습니다. 제거합니다..."
         sudo firewall-cmd --permanent --remove-port="$V_PORT"/tcp &> /dev/null
