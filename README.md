@@ -7,3 +7,4 @@
 - Network More ssh Withshell ifs Commands : [07.25 vi 조건문 활용 복습](codes/quests/03_ssh_more_withshell_ifs.md)
 - Network Shell Script Process : [07.28 Shell 프로세스 활용](codes/quests/04_shell_script_process.md)
 - Network Shell Port : [07.28 Shell Port 활용](codes/quests/05_shell_ports.md)
+- Network Shell Firewalls : [07.29 Shell Firewalls 활용](codes/quests/06_shell_firewalls.md)
