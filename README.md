@@ -1,4 +1,4 @@
-# 💾 Network
+# 💬 Network
 - **Bespin Global Cloud Engineer**
 - **Rocky 기반으로 실습한 내용**
 ## Practice
